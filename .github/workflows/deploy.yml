@@ -1,4 +1,4 @@
-# .github/workflows/deploy.yml file
+
 - name: Build
   run: npm install && npm run build
 - name: Deploy
