@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Introduction à Époptès · Époptès Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+      --code-bg: #1a1c20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; line-height: 1.7; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    aside .logo {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-decoration: none;
+    }
+    aside .greek {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    aside nav a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s;
+    }
+    aside nav a:hover { background: var(--bg); color: var(--text); }
+    aside nav a.active {
+      background: rgba(201, 150, 58, 0.1);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    aside .api-link {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    main { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    h2 { font-size: 1.6rem; margin: 3rem 0 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin: 2rem 0 0.8rem; color: var(--gold); }
+    h4 { font-size: 1.05rem; margin: 1.5rem 0 0.6rem; color: var(--text); }
+    p { margin-bottom: 1rem; color: var(--text); opacity: 0.92; }
+    blockquote { border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem; background: var(--surface); margin: 1.2rem 0; color: var(--muted); font-style: italic; border-radius: 0 6px 6px 0; }
+    ul, ol { margin: 1rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code:not(pre code) {
+      background: var(--surface);
+      color: var(--gold);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+    pre code { font-family: 'SF Mono', Monaco, Consolas, monospace; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: 0.85em; }
+
+    .breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <a href="../index.html" class="logo">Époptès</a>
+      <div class="greek">ἘΠΌΠΤΗΣ</div>
+      <nav>
+        
+          <a href="01-introduction.html" class="active">Introduction à Époptès</a>
+        
+          <a href="02-authentication.html" class="">Authentification</a>
+        
+          <a href="03-pagination.html" class="">Pagination</a>
+        
+          <a href="04-errors.html" class="">Gestion des erreurs</a>
+        
+          <a href="05-rate-limits.html" class="">Rate Limiting</a>
+        
+          <a href="06-cycle-de-vie.html" class="">Cycle de vie des entités</a>
+        
+          <a href="07-quickstart.html" class="">Quickstart — Premiers appels en 5 minutes</a>
+        
+          <a href="08-websockets.html" class="">WebSockets — Notifications temps réel</a>
+        
+        <div class="api-link">
+          <a href="../api.html" style="color: var(--green); font-weight: 600;">→ API Reference</a>
+        </div>
+      </nav>
+    </aside>
+    <main>
+      <div class="breadcrumb">
+        <a href="../index.html">Documentation</a> / Guides / Introduction à Époptès
+      </div>
+      <h1>Introduction à Époptès</h1>
+<blockquote>
+<p><em>Du grec ancien — celui qui voit tout. Ni dans la mêlée, ni aveugle.</em></p>
+</blockquote>
+<h2>Qu&#39;est-ce qu&#39;Époptès ?</h2>
+<p>Époptès (ἘΠΌΠΤΗΣ) est le <strong>back-office de pilotage</strong> de la plateforme <strong>KANTO APLO</strong>, conçu et opéré par <strong>Cephalo Sophie</strong>.</p>
+<p>Il est strictement séparé de KANTO APLO :</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Époptès</th>
+<th>KANTO APLO (côté client)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Utilisateurs</td>
+<td>Équipe Cephalo Sophie</td>
+<td>Organisations clientes (Scripteurs)</td>
+</tr>
+<tr>
+<td>Rôle</td>
+<td>Superviser, valider, configurer</td>
+<td>Créer, déployer, analyser</td>
+</tr>
+<tr>
+<td>Accès aux données</td>
+<td>Vue macro, jamais le contenu métier</td>
+<td>Contenu propre uniquement</td>
+</tr>
+</tbody></table>
+<h2>Périmètre fonctionnel</h2>
+<p>Époptès gère :</p>
+<ul>
+<li>La création et publication des <strong>plans tarifaires</strong></li>
+<li>La forge et publication des <strong>blocs Blockly</strong> (via Héphaïstos)</li>
+<li>La forge et publication des <strong>templates structurels</strong> (via Typοs)</li>
+<li>La supervision des <strong>organisations clientes</strong></li>
+<li>La validation des inscriptions</li>
+<li>La configuration globale de la plateforme</li>
+</ul>
+<p>Époptès <strong>ne gère jamais</strong> :</p>
+<ul>
+<li>Le contenu créé par les organisations (pages, APIs, surveys, données)</li>
+<li>Les données personnelles des membres au-delà du nécessaire</li>
+<li>Les opérations internes aux organisations</li>
+</ul>
+<h2>Architecture en bref</h2>
+<p>8 microservices Node.js indépendants, chacun avec sa propre base MongoDB :</p>
+<pre><code>┌──────────────────────────────────────────────────────────┐
+│                     API Gateway                           │
+│                  (Fastify, port 3000)                     │
+└────────────────────────┬─────────────────────────────────┘
+                         │
+   ┌─────────┬───────────┼───────────┬─────────┬─────────┐
+   ▼         ▼           ▼           ▼         ▼         ▼
+  Auth     Plan        Bloc      Template    Org    Settings
+  3001     3002        3003        3004      3005    3006
+                                                ▼         ▼
+                                            Support  Notification
+                                              3007       3008
+</code></pre>
+<p>Tous les appels passent par le <strong>Gateway</strong>. Aucun service interne n&#39;est accessible directement de l&#39;extérieur.</p>
+<h2>Conventions</h2>
+<p><strong>Identifiants</strong> — strings préfixés par type :</p>
+<ul>
+<li><code>user_abc123</code>, <code>plan_def456</code>, <code>bloc_xyz789</code>, <code>tpl_qrs012</code>, <code>org_mno345</code></li>
+</ul>
+<p><strong>Dates</strong> — format ISO 8601 :</p>
+<ul>
+<li><code>2026-05-01T10:00:00Z</code></li>
+</ul>
+<p><strong>Pagination</strong> — uniforme sur toutes les listes :</p>
+<pre><code>GET /plans?page=1&amp;limit=20
+</code></pre>
+<p>Réponse :</p>
+<pre><code class="language-json">{
+  &quot;data&quot;:  [...],
+  &quot;total&quot;: 84,
+  &quot;page&quot;:  1,
+  &quot;limit&quot;: 20
+}
+</code></pre>
+<p><strong>Erreurs</strong> — structure cohérente :</p>
+<pre><code class="language-json">{
+  &quot;error&quot;:      &quot;VALIDATION_ERROR&quot;,
+  &quot;message&quot;:    &quot;Plan must have at least one enabled editor&quot;,
+  &quot;statusCode&quot;: 422
+}
+</code></pre>
+<h2>Pour commencer</h2>
+<ul>
+<li><a href="./07-quickstart.html">Démarrer en 5 minutes</a> — premiers appels concrets</li>
+<li><a href="./02-authentication.html">Authentification</a> — comment obtenir et utiliser un token</li>
+<li><a href="./06-cycle-de-vie.html">Cycle de vie des entités</a> — comprendre les statuts</li>
+</ul>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

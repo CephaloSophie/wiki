@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Époptès — Documentation</title>
+  <meta name="description" content="Documentation complète de l'API Époptès — KANTO APLO" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      right: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(201, 150, 58, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 10%;
+      left: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .greek {
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.04em;
+    }
+
+    .tagline {
+      font-size: 1.4rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin-bottom: 0.5rem;
+      font-style: italic;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text);
+      max-width: 700px;
+      margin-bottom: 3rem;
+      opacity: 0.85;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .btn {
+      padding: 0.9rem 1.6rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #0d0e10;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(201, 150, 58, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+    }
+    .card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .card-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+    .card h3   { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--gold); }
+    .card p    { color: var(--muted); font-size: 0.95rem; }
+
+    .stats {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gold);
+      display: block;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.3rem;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 2rem 1.2rem; }
+      .stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="greek">ἘΠΌΠΤΗΣ · Époptès</div>
+    <h1>API Documentation</h1>
+    <p class="tagline">Celui qui voit tout, sans intervenir.</p>
+    <p class="subtitle">
+      Documentation complète de l'API back-office Époptès — la couche de supervision et de pilotage
+      de la plateforme KANTO APLO. Conçue par Cephalo Sophie pour les développeurs, intégrateurs et IA.
+    </p>
+
+    <div class="actions">
+      <a href="./api.html" class="btn btn-primary">
+        🚀 Explorer l'API
+      </a>
+      <a href="./guides/07-quickstart.html" class="btn btn-secondary">
+        ⚡ Quickstart 5 min
+      </a>
+      <a href="./openapi/epoptes-openapi.json" class="btn btn-secondary" download>
+        📥 Télécharger OpenAPI
+      </a>
+    </div>
+
+    <div class="grid">
+      <a href="./guides/01-introduction.html" class="card">
+        <span class="card-icon">📖</span>
+        <h3>Introduction</h3>
+        <p>Vue d'ensemble d'Époptès et de son périmètre fonctionnel</p>
+      </a>
+      <a href="./guides/02-authentication.html" class="card">
+        <span class="card-icon">🔐</span>
+        <h3>Authentification</h3>
+        <p>JWT, refresh, rôles super_admin et admin</p>
+      </a>
+      <a href="./guides/06-cycle-de-vie.html" class="card">
+        <span class="card-icon">🔄</span>
+        <h3>Cycle de vie</h3>
+        <p>Statuts des plans, blocs, templates et organisations</p>
+      </a>
+      <a href="./guides/04-errors.html" class="card">
+        <span class="card-icon">⚠️</span>
+        <h3>Gestion d'erreurs</h3>
+        <p>Format unifié, codes HTTP, patterns de retry</p>
+      </a>
+      <a href="./guides/03-pagination.html" class="card">
+        <span class="card-icon">📑</span>
+        <h3>Pagination</h3>
+        <p>Listes, filtres, itération côté client</p>
+      </a>
+      <a href="./guides/08-websockets.html" class="card">
+        <span class="card-icon">⚡</span>
+        <h3>WebSockets</h3>
+        <p>Notifications temps réel via Socket.io</p>
+      </a>
+    </div>
+
+    <div class="stats">
+      <div>
+        <span class="stat-num">73</span>
+        <span class="stat-label">Endpoints</span>
+      </div>
+      <div>
+        <span class="stat-num">8</span>
+        <span class="stat-label">Microservices</span>
+      </div>
+      <div>
+        <span class="stat-num">12</span>
+        <span class="stat-label">Domaines</span>
+      </div>
+      <div>
+        <span class="stat-num">30+</span>
+        <span class="stat-label">Schémas</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Cephalo Sophie</strong> · KANTO APLO ·
+      <a href="https://cephalosophie.com" target="_blank" rel="noopener">cephalosophie.com</a>
+    </p>
+    <p style="margin-top: 0.5rem; opacity: 0.6;">
+      ΚΆΝΤΟ ΑΠΛΌ · Rends-le simple
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cycle de vie des entités · Époptès Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+      --code-bg: #1a1c20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; line-height: 1.7; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    aside .logo {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-decoration: none;
+    }
+    aside .greek {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    aside nav a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s;
+    }
+    aside nav a:hover { background: var(--bg); color: var(--text); }
+    aside nav a.active {
+      background: rgba(201, 150, 58, 0.1);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    aside .api-link {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    main { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    h2 { font-size: 1.6rem; margin: 3rem 0 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin: 2rem 0 0.8rem; color: var(--gold); }
+    h4 { font-size: 1.05rem; margin: 1.5rem 0 0.6rem; color: var(--text); }
+    p { margin-bottom: 1rem; color: var(--text); opacity: 0.92; }
+    blockquote { border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem; background: var(--surface); margin: 1.2rem 0; color: var(--muted); font-style: italic; border-radius: 0 6px 6px 0; }
+    ul, ol { margin: 1rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code:not(pre code) {
+      background: var(--surface);
+      color: var(--gold);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+    pre code { font-family: 'SF Mono', Monaco, Consolas, monospace; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: 0.85em; }
+
+    .breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <a href="../index.html" class="logo">Époptès</a>
+      <div class="greek">ἘΠΌΠΤΗΣ</div>
+      <nav>
+        
+          <a href="01-introduction.html" class="">Introduction à Époptès</a>
+        
+          <a href="02-authentication.html" class="">Authentification</a>
+        
+          <a href="03-pagination.html" class="">Pagination</a>
+        
+          <a href="04-errors.html" class="">Gestion des erreurs</a>
+        
+          <a href="05-rate-limits.html" class="">Rate Limiting</a>
+        
+          <a href="06-cycle-de-vie.html" class="active">Cycle de vie des entités</a>
+        
+          <a href="07-quickstart.html" class="">Quickstart — Premiers appels en 5 minutes</a>
+        
+          <a href="08-websockets.html" class="">WebSockets — Notifications temps réel</a>
+        
+        <div class="api-link">
+          <a href="../api.html" style="color: var(--green); font-weight: 600;">→ API Reference</a>
+        </div>
+      </nav>
+    </aside>
+    <main>
+      <div class="breadcrumb">
+        <a href="../index.html">Documentation</a> / Guides / Cycle de vie des entités
+      </div>
+      <h1>Cycle de vie des entités</h1>
+<p>Toutes les entités Époptès suivent un cycle de vie strict avec des transitions contrôlées.</p>
+<h2>Principe d&#39;immuabilité</h2>
+<p>Une fois publiée (<code>ready</code>), une entité <strong>ne peut plus être modifiée</strong>. Pour faire évoluer une entité publiée :</p>
+<ul>
+<li>Pour les <strong>plans</strong> : créer un nouveau plan (clone)</li>
+<li>Pour les <strong>blocs et templates</strong> : dupliquer pour créer une nouvelle version</li>
+</ul>
+<h2>Plans</h2>
+<pre><code>DRAFT → PENDING → READY → FINISHED
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Statut</th>
+<th>Éditable</th>
+<th>Visible</th>
+<th>Souscriptible</th>
+<th>Qui peut agir</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>draft</code></td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>pending</code></td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>admin (soumet)</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>super_admin (valide)</td>
+</tr>
+<tr>
+<td><code>finished</code></td>
+<td>❌</td>
+<td>✅ existants</td>
+<td>❌</td>
+<td>super_admin (archive)</td>
+</tr>
+</tbody></table>
+<p><strong>Transitions :</strong></p>
+<ul>
+<li><code>draft → pending</code> : <code>PATCH /plans/{id}/submit</code> (admin)</li>
+<li><code>pending → ready</code> : <code>PATCH /plans/{id}/validate</code> (super_admin)</li>
+<li><code>pending → draft</code> : <code>PATCH /plans/{id}/reject</code> avec <code>reason</code> (super_admin)</li>
+<li><code>ready → finished</code> : <code>PATCH /plans/{id}/finish</code> (super_admin)</li>
+</ul>
+<p><strong>Snapshot</strong> : à chaque souscription d&#39;une organisation, un <strong>snapshot immuable</strong> du plan est créé. Même si le plan passe <code>finished</code>, le snapshot reste intact pour la durée de la souscription.</p>
+<h2>Blocs et Templates</h2>
+<pre><code>DRAFT → PENDING → READY → DUPLICATED
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Statut</th>
+<th>Éditable</th>
+<th>Utilisable</th>
+<th>Qui peut agir</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>draft</code></td>
+<td>✅</td>
+<td>❌</td>
+<td>admin</td>
+</tr>
+<tr>
+<td><code>pending</code></td>
+<td>❌</td>
+<td>❌</td>
+<td>admin (soumet)</td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>super_admin (valide)</td>
+</tr>
+<tr>
+<td><code>duplicated</code></td>
+<td>❌</td>
+<td>⚠️ legacy uniquement</td>
+<td>système</td>
+</tr>
+</tbody></table>
+<p><strong>Règle de duplication</strong> : un bloc <code>ready</code> ne se supprime jamais. Si une nouvelle version est publiée :</p>
+<ol>
+<li>La nouvelle version est créée en <code>draft</code> via <code>POST /blocs/{id}/duplicate</code></li>
+<li>Elle suit le cycle normal : <code>draft → pending → ready</code></li>
+<li><strong>Au moment où la nouvelle version passe <code>ready</code></strong>, l&#39;ancienne passe automatiquement <code>duplicated</code></li>
+<li>Les références existantes vers l&#39;ancienne version continuent de fonctionner</li>
+</ol>
+<p><strong>Traçabilité de lignée</strong> :</p>
+<pre><code class="language-json">// Nouvelle version (ready)
+{
+  &quot;_id&quot;:             &quot;bloc_v2&quot;,
+  &quot;status&quot;:          &quot;ready&quot;,
+  &quot;duplicated_from&quot;: &quot;bloc_v1&quot;
+}
+
+// Ancienne version (duplicated)
+{
+  &quot;_id&quot;:         &quot;bloc_v1&quot;,
+  &quot;status&quot;:      &quot;duplicated&quot;,
+  &quot;replaced_by&quot;: &quot;bloc_v2&quot;
+}
+</code></pre>
+<p>Récupère toute la lignée :</p>
+<pre><code>GET /blocs/{id}/lineage
+</code></pre>
+<h2>Organisations</h2>
+<pre><code>PENDING → ACTIVE → SUSPENDED → CLOSED
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Statut</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pending</code></td>
+<td>Inscription reçue, en attente de validation</td>
+</tr>
+<tr>
+<td><code>active</code></td>
+<td>Accès complet à la plateforme</td>
+</tr>
+<tr>
+<td><code>suspended</code></td>
+<td>Accès bloqué temporairement (impayé, violation)</td>
+</tr>
+<tr>
+<td><code>closed</code></td>
+<td>Fin de vie, données archivées</td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td>Inscription refusée (terminal)</td>
+</tr>
+</tbody></table>
+<p><strong>Transitions</strong> :</p>
+<ul>
+<li><code>pending → active</code> : <code>PATCH /orgs/{id}/validate</code> (super_admin)</li>
+<li><code>pending → rejected</code> : <code>PATCH /orgs/{id}/reject</code> avec <code>reason</code> (super_admin)</li>
+<li><code>active → suspended</code> : <code>PATCH /orgs/{id}/suspend</code> avec <code>reason</code> (super_admin)</li>
+<li><code>suspended → active</code> : <code>PATCH /orgs/{id}/reactivate</code> (super_admin)</li>
+<li><code>* → closed</code> : <code>PATCH /orgs/{id}/close</code> avec <code>confirm: true</code> (super_admin)</li>
+</ul>
+<p>⚠️ <strong>Fermer une organisation est irréversible</strong> — le <code>confirm: true</code> est obligatoire dans le payload.</p>
+<h2>Workflow type — Création complète d&#39;un plan</h2>
+<pre><code class="language-javascript">// 1. Admin crée le plan en draft
+const plan = await POST(&#39;/plans&#39;, { name: &#39;Pro&#39;, editors: {...} })
+// → { _id: &#39;plan_abc&#39;, status: &#39;draft&#39; }
+
+// 2. Admin modifie le plan pendant qu&#39;il est en draft
+await PUT(`/plans/${plan._id}`, { description: &#39;Plan pro pour équipes&#39; })
+
+// 3. Admin soumet pour validation
+await PATCH(`/plans/${plan._id}/submit`)
+// → status: &#39;pending&#39;
+
+// 4. Super_admin valide (ou rejette)
+await PATCH(`/plans/${plan._id}/validate`)
+// → status: &#39;ready&#39; — visible et souscriptible
+
+// 5. Plus tard, super_admin archive
+await PATCH(`/plans/${plan._id}/finish`)
+// → status: &#39;finished&#39; — orgs existantes en grandfathering
+</code></pre>
+<h2>Workflow type — Duplication d&#39;un bloc</h2>
+<pre><code class="language-javascript">// Bloc existant en ready
+// { _id: &#39;bloc_v1&#39;, status: &#39;ready&#39;, version: 1 }
+
+// 1. Admin duplique le bloc
+const v2 = await POST(&#39;/blocs/bloc_v1/duplicate&#39;, { name: &#39;Form Contact V2&#39; })
+// → { _id: &#39;bloc_v2&#39;, status: &#39;draft&#39;, version: 2, duplicated_from: &#39;bloc_v1&#39; }
+
+// 2. Cycle classique
+await PATCH(&#39;/blocs/bloc_v2/submit&#39;)
+await PATCH(&#39;/blocs/bloc_v2/validate&#39;)
+
+// 3. Automatiquement, bloc_v1 passe duplicated
+// { _id: &#39;bloc_v1&#39;, status: &#39;duplicated&#39;, replaced_by: &#39;bloc_v2&#39; }
+// { _id: &#39;bloc_v2&#39;, status: &#39;ready&#39;, duplicated_from: &#39;bloc_v1&#39; }
+</code></pre>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

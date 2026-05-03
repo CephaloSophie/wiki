@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rate Limiting · Époptès Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+      --code-bg: #1a1c20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; line-height: 1.7; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    aside .logo {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-decoration: none;
+    }
+    aside .greek {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    aside nav a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s;
+    }
+    aside nav a:hover { background: var(--bg); color: var(--text); }
+    aside nav a.active {
+      background: rgba(201, 150, 58, 0.1);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    aside .api-link {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    main { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    h2 { font-size: 1.6rem; margin: 3rem 0 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin: 2rem 0 0.8rem; color: var(--gold); }
+    h4 { font-size: 1.05rem; margin: 1.5rem 0 0.6rem; color: var(--text); }
+    p { margin-bottom: 1rem; color: var(--text); opacity: 0.92; }
+    blockquote { border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem; background: var(--surface); margin: 1.2rem 0; color: var(--muted); font-style: italic; border-radius: 0 6px 6px 0; }
+    ul, ol { margin: 1rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code:not(pre code) {
+      background: var(--surface);
+      color: var(--gold);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+    pre code { font-family: 'SF Mono', Monaco, Consolas, monospace; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: 0.85em; }
+
+    .breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <a href="../index.html" class="logo">Époptès</a>
+      <div class="greek">ἘΠΌΠΤΗΣ</div>
+      <nav>
+        
+          <a href="01-introduction.html" class="">Introduction à Époptès</a>
+        
+          <a href="02-authentication.html" class="">Authentification</a>
+        
+          <a href="03-pagination.html" class="">Pagination</a>
+        
+          <a href="04-errors.html" class="">Gestion des erreurs</a>
+        
+          <a href="05-rate-limits.html" class="active">Rate Limiting</a>
+        
+          <a href="06-cycle-de-vie.html" class="">Cycle de vie des entités</a>
+        
+          <a href="07-quickstart.html" class="">Quickstart — Premiers appels en 5 minutes</a>
+        
+          <a href="08-websockets.html" class="">WebSockets — Notifications temps réel</a>
+        
+        <div class="api-link">
+          <a href="../api.html" style="color: var(--green); font-weight: 600;">→ API Reference</a>
+        </div>
+      </nav>
+    </aside>
+    <main>
+      <div class="breadcrumb">
+        <a href="../index.html">Documentation</a> / Guides / Rate Limiting
+      </div>
+      <h1>Rate Limiting</h1>
+<p>Le gateway Époptès applique un rate limit pour protéger les services internes contre la surcharge.</p>
+<h2>Limites par défaut</h2>
+<table>
+<thead>
+<tr>
+<th>Environnement</th>
+<th>Limite</th>
+<th>Fenêtre</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Development</td>
+<td>1000 requêtes</td>
+<td>60 secondes</td>
+</tr>
+<tr>
+<td>Production</td>
+<td>100 requêtes</td>
+<td>60 secondes</td>
+</tr>
+</tbody></table>
+<p>Ces limites sont appliquées <strong>par IP cliente</strong>.</p>
+<h2>Headers de rate limit</h2>
+<p>Chaque réponse inclut des headers indiquant l&#39;état actuel :</p>
+<pre><code>X-RateLimit-Limit:     100
+X-RateLimit-Remaining: 87
+X-RateLimit-Reset:     1746003600
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>X-RateLimit-Limit</code></td>
+<td>Limite totale dans la fenêtre</td>
+</tr>
+<tr>
+<td><code>X-RateLimit-Remaining</code></td>
+<td>Requêtes restantes</td>
+</tr>
+<tr>
+<td><code>X-RateLimit-Reset</code></td>
+<td>Timestamp Unix du reset</td>
+</tr>
+</tbody></table>
+<h2>Comportement quand la limite est atteinte</h2>
+<pre><code class="language-http">HTTP/1.1 429 Too Many Requests
+Retry-After: 42
+
+{
+  &quot;error&quot;:      &quot;TOO_MANY_REQUESTS&quot;,
+  &quot;message&quot;:    &quot;Rate limit exceeded&quot;,
+  &quot;statusCode&quot;: 429
+}
+</code></pre>
+<p>Le header <code>Retry-After</code> indique le nombre de secondes avant de pouvoir réessayer.</p>
+<h2>Pattern de retry côté client</h2>
+<pre><code class="language-javascript">async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let i = 0; i &lt; maxRetries; i++) {
+    const res = await fetch(url, options)
+    if (res.status !== 429) return res
+
+    const retryAfter = parseInt(res.headers.get(&#39;Retry-After&#39;) || &#39;1&#39;) * 1000
+    await new Promise(r =&gt; setTimeout(r, retryAfter))
+  }
+  throw new Error(&#39;Rate limit retry exhausted&#39;)
+}
+</code></pre>
+<h2>Bonnes pratiques</h2>
+<ul>
+<li><strong>Cache</strong> les réponses peu volatiles (<code>/plans</code>, <code>/blocs/catalog</code>)</li>
+<li><strong>Pagine</strong> correctement au lieu de demander de gros volumes en une fois</li>
+<li><strong>Évite les polling agressifs</strong> — utilise les WebSocket pour les notifications temps réel</li>
+<li><strong>Batch</strong> les opérations quand possible</li>
+</ul>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

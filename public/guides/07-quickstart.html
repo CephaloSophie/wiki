@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quickstart — Premiers appels en 5 minutes · Époptès Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+      --code-bg: #1a1c20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; line-height: 1.7; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    aside .logo {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-decoration: none;
+    }
+    aside .greek {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    aside nav a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s;
+    }
+    aside nav a:hover { background: var(--bg); color: var(--text); }
+    aside nav a.active {
+      background: rgba(201, 150, 58, 0.1);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    aside .api-link {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    main { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    h2 { font-size: 1.6rem; margin: 3rem 0 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin: 2rem 0 0.8rem; color: var(--gold); }
+    h4 { font-size: 1.05rem; margin: 1.5rem 0 0.6rem; color: var(--text); }
+    p { margin-bottom: 1rem; color: var(--text); opacity: 0.92; }
+    blockquote { border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem; background: var(--surface); margin: 1.2rem 0; color: var(--muted); font-style: italic; border-radius: 0 6px 6px 0; }
+    ul, ol { margin: 1rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code:not(pre code) {
+      background: var(--surface);
+      color: var(--gold);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+    pre code { font-family: 'SF Mono', Monaco, Consolas, monospace; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: 0.85em; }
+
+    .breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <a href="../index.html" class="logo">Époptès</a>
+      <div class="greek">ἘΠΌΠΤΗΣ</div>
+      <nav>
+        
+          <a href="01-introduction.html" class="">Introduction à Époptès</a>
+        
+          <a href="02-authentication.html" class="">Authentification</a>
+        
+          <a href="03-pagination.html" class="">Pagination</a>
+        
+          <a href="04-errors.html" class="">Gestion des erreurs</a>
+        
+          <a href="05-rate-limits.html" class="">Rate Limiting</a>
+        
+          <a href="06-cycle-de-vie.html" class="">Cycle de vie des entités</a>
+        
+          <a href="07-quickstart.html" class="active">Quickstart — Premiers appels en 5 minutes</a>
+        
+          <a href="08-websockets.html" class="">WebSockets — Notifications temps réel</a>
+        
+        <div class="api-link">
+          <a href="../api.html" style="color: var(--green); font-weight: 600;">→ API Reference</a>
+        </div>
+      </nav>
+    </aside>
+    <main>
+      <div class="breadcrumb">
+        <a href="../index.html">Documentation</a> / Guides / Quickstart — Premiers appels en 5 minutes
+      </div>
+      <h1>Quickstart — Premiers appels en 5 minutes</h1>
+<p>Ce guide te fait passer de zéro à ton premier appel API authentifié réussi.</p>
+<h2>Prérequis</h2>
+<ul>
+<li>Époptès tourne en local (gateway sur <code>http://localhost:3000</code>)</li>
+<li>Le seed a été exécuté (<code>npm run seed:base</code>)</li>
+<li>Un client HTTP : <code>curl</code>, Postman, ou ton terminal</li>
+</ul>
+<h2>Étape 1 — Vérifier que tout tourne</h2>
+<pre><code class="language-bash">curl http://localhost:3000/health
+</code></pre>
+<p>Réponse attendue :</p>
+<pre><code class="language-json">{ &quot;status&quot;: &quot;ok&quot;, &quot;service&quot;: &quot;api-gateway&quot; }
+</code></pre>
+<p>Si tu ne reçois rien : le gateway n&#39;est pas démarré. Lance <code>npm run dev</code> à la racine du projet.</p>
+<h2>Étape 2 — Se connecter</h2>
+<pre><code class="language-bash">curl -X POST http://localhost:3000/auth/login \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;email&quot;:    &quot;superadmin@cephalosophie.com&quot;,
+    &quot;password&quot;: &quot;SuperAdmin2026!&quot;
+  }&#39;
+</code></pre>
+<p>Réponse :</p>
+<pre><code class="language-json">{
+  &quot;access_token&quot;:  &quot;eyJhbGciOi...&quot;,
+  &quot;refresh_token&quot;: &quot;eyJhbGciOi...&quot;,
+  &quot;expires_in&quot;:    3600,
+  &quot;user&quot;: {
+    &quot;id&quot;:    &quot;user_abc123&quot;,
+    &quot;email&quot;: &quot;superadmin@cephalosophie.com&quot;,
+    &quot;role&quot;:  &quot;super_admin&quot;
+  }
+}
+</code></pre>
+<p>Sauvegarde l&#39;<code>access_token</code> dans une variable :</p>
+<pre><code class="language-bash">TOKEN=$(curl -s -X POST http://localhost:3000/auth/login \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;email&quot;:&quot;superadmin@cephalosophie.com&quot;,&quot;password&quot;:&quot;SuperAdmin2026!&quot;}&#39; \
+  | jq -r &#39;.access_token&#39;)
+</code></pre>
+<h2>Étape 3 — Récupérer ton profil</h2>
+<pre><code class="language-bash">curl http://localhost:3000/auth/me \
+  -H &quot;Authorization: Bearer $TOKEN&quot;
+</code></pre>
+<h2>Étape 4 — Lister les plans existants</h2>
+<pre><code class="language-bash">curl http://localhost:3000/plans \
+  -H &quot;Authorization: Bearer $TOKEN&quot;
+</code></pre>
+<h2>Étape 5 — Créer ton premier plan</h2>
+<pre><code class="language-bash">curl -X POST http://localhost:3000/plans \
+  -H &quot;Authorization: Bearer $TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{
+    &quot;name&quot;:        &quot;Mon Premier Plan&quot;,
+    &quot;description&quot;: &quot;Plan de test&quot;,
+    &quot;editors&quot;: {
+      &quot;tekton&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;quotas&quot;: {
+          &quot;max_pages&quot;: { &quot;limit&quot;: 50, &quot;period&quot;: &quot;monthly&quot;, &quot;on_exceed&quot;: &quot;hard_block&quot; }
+        }
+      },
+      &quot;mantis&quot;: {
+        &quot;enabled&quot;: true,
+        &quot;quotas&quot;: {
+          &quot;max_requests&quot;: { &quot;limit&quot;: 100000, &quot;period&quot;: &quot;monthly&quot;, &quot;on_exceed&quot;: &quot;overage&quot; }
+        }
+      }
+    }
+  }&#39;
+</code></pre>
+<p>Réponse :</p>
+<pre><code class="language-json">{
+  &quot;_id&quot;:        &quot;plan_xyz789&quot;,
+  &quot;name&quot;:       &quot;Mon Premier Plan&quot;,
+  &quot;status&quot;:     &quot;draft&quot;,
+  &quot;created_by&quot;: &quot;user_abc123&quot;,
+  &quot;created_at&quot;: &quot;2026-05-01T10:00:00Z&quot;
+}
+</code></pre>
+<h2>Étape 6 — Cycle de vie complet</h2>
+<pre><code class="language-bash">PLAN_ID=&quot;plan_xyz789&quot;  # ID retourné à l&#39;étape 5
+
+# Soumettre
+curl -X PATCH http://localhost:3000/plans/$PLAN_ID/submit \
+  -H &quot;Authorization: Bearer $TOKEN&quot;
+# → status: &quot;pending&quot;
+
+# Valider (super_admin)
+curl -X PATCH http://localhost:3000/plans/$PLAN_ID/validate \
+  -H &quot;Authorization: Bearer $TOKEN&quot;
+# → status: &quot;ready&quot;
+</code></pre>
+<h2>Et après ?</h2>
+<ul>
+<li><a href="./02-authentication.html">Authentification détaillée</a></li>
+<li><a href="./06-cycle-de-vie.html">Cycle de vie complet</a></li>
+<li><a href="./04-errors.html">Gestion des erreurs</a></li>
+<li>Explore l&#39;API interactive ci-dessus avec le bouton &quot;Try it out&quot;</li>
+</ul>
+<h2>Exemple complet en JavaScript</h2>
+<pre><code class="language-javascript">const API = &#39;http://localhost:3000&#39;
+
+async function main() {
+  // 1. Login
+  const login = await fetch(`${API}/auth/login`, {
+    method:  &#39;POST&#39;,
+    headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },
+    body:    JSON.stringify({
+      email:    &#39;superadmin@cephalosophie.com&#39;,
+      password: &#39;SuperAdmin2026!&#39;
+    })
+  }).then(r =&gt; r.json())
+
+  const token = login.access_token
+  const headers = {
+    &#39;Authorization&#39;: `Bearer ${token}`,
+    &#39;Content-Type&#39;:  &#39;application/json&#39;
+  }
+
+  // 2. Créer un plan
+  const plan = await fetch(`${API}/plans`, {
+    method:  &#39;POST&#39;,
+    headers,
+    body:    JSON.stringify({
+      name: &#39;Plan via JS&#39;,
+      editors: { tekton: { enabled: true, quotas: {} } }
+    })
+  }).then(r =&gt; r.json())
+
+  console.log(&#39;Plan créé :&#39;, plan._id)
+
+  // 3. Soumettre puis valider
+  await fetch(`${API}/plans/${plan._id}/submit`,   { method: &#39;PATCH&#39;, headers })
+  await fetch(`${API}/plans/${plan._id}/validate`, { method: &#39;PATCH&#39;, headers })
+
+  // 4. Lister les plans ready
+  const list = await fetch(`${API}/plans?status=ready`, { headers }).then(r =&gt; r.json())
+  console.log(&#39;Plans ready :&#39;, list.total)
+}
+
+main().catch(console.error)
+</code></pre>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

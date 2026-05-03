@@ -1,0 +1,19 @@
+{
+  "name": "epoptes-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build:guides": "node scripts/build-guides.js",
+    "build:openapi": "node scripts/sync-openapi.js",
+    "build": "npm run build:openapi && npm run build:guides && npm run copy:openapi",
+    "copy:openapi": "mkdir -p public/openapi && cp openapi/epoptes-openapi.json public/openapi/",
+    "serve": "npx http-server public -p 8080 -c-1",
+    "dev": "npm run build && npm run serve"
+  },
+  "dependencies": {
+    "marked": "^12.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

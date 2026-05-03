@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestion des erreurs · Époptès Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <style>
+    :root {
+      --gold:    #C9963A;
+      --green:   #2DD4A0;
+      --purple:  #8B5CF6;
+      --bg:      #0d0e10;
+      --surface: #16181c;
+      --border:  #232529;
+      --text:    #e8eaed;
+      --muted:   #9aa0a6;
+      --code-bg: #1a1c20;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif; line-height: 1.7; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+    aside {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    aside .logo {
+      display: block;
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--green) 50%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.3rem;
+      text-decoration: none;
+    }
+    aside .greek {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    aside nav a {
+      display: block;
+      padding: 0.6rem 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s;
+    }
+    aside nav a:hover { background: var(--bg); color: var(--text); }
+    aside nav a.active {
+      background: rgba(201, 150, 58, 0.1);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    aside .api-link {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    main { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; width: 100%; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    h2 { font-size: 1.6rem; margin: 3rem 0 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    h3 { font-size: 1.25rem; margin: 2rem 0 0.8rem; color: var(--gold); }
+    h4 { font-size: 1.05rem; margin: 1.5rem 0 0.6rem; color: var(--text); }
+    p { margin-bottom: 1rem; color: var(--text); opacity: 0.92; }
+    blockquote { border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem; background: var(--surface); margin: 1.2rem 0; color: var(--muted); font-style: italic; border-radius: 0 6px 6px 0; }
+    ul, ol { margin: 1rem 0 1rem 1.5rem; }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--gold); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code:not(pre code) {
+      background: var(--surface);
+      color: var(--gold);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      margin: 1.2rem 0;
+      font-size: 0.9rem;
+    }
+    pre code { font-family: 'SF Mono', Monaco, Consolas, monospace; line-height: 1.6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      background: var(--surface);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; color: var(--gold); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:last-child td { border-bottom: none; }
+    td code { font-size: 0.85em; }
+
+    .breadcrumb { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; max-height: 200px; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <a href="../index.html" class="logo">Époptès</a>
+      <div class="greek">ἘΠΌΠΤΗΣ</div>
+      <nav>
+        
+          <a href="01-introduction.html" class="">Introduction à Époptès</a>
+        
+          <a href="02-authentication.html" class="">Authentification</a>
+        
+          <a href="03-pagination.html" class="">Pagination</a>
+        
+          <a href="04-errors.html" class="active">Gestion des erreurs</a>
+        
+          <a href="05-rate-limits.html" class="">Rate Limiting</a>
+        
+          <a href="06-cycle-de-vie.html" class="">Cycle de vie des entités</a>
+        
+          <a href="07-quickstart.html" class="">Quickstart — Premiers appels en 5 minutes</a>
+        
+          <a href="08-websockets.html" class="">WebSockets — Notifications temps réel</a>
+        
+        <div class="api-link">
+          <a href="../api.html" style="color: var(--green); font-weight: 600;">→ API Reference</a>
+        </div>
+      </nav>
+    </aside>
+    <main>
+      <div class="breadcrumb">
+        <a href="../index.html">Documentation</a> / Guides / Gestion des erreurs
+      </div>
+      <h1>Gestion des erreurs</h1>
+<p>Toutes les erreurs Époptès suivent un format unique et prédictible.</p>
+<h2>Format de l&#39;erreur</h2>
+<pre><code class="language-json">{
+  &quot;error&quot;:      &quot;VALIDATION_ERROR&quot;,
+  &quot;message&quot;:    &quot;Plan must have at least one enabled editor&quot;,
+  &quot;statusCode&quot;: 422
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Champ</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>error</code></td>
+<td>string</td>
+<td>Code machine-readable</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>string</td>
+<td>Message lisible par humain</td>
+</tr>
+<tr>
+<td><code>statusCode</code></td>
+<td>integer</td>
+<td>Code HTTP</td>
+</tr>
+</tbody></table>
+<h2>Codes d&#39;erreur HTTP</h2>
+<h3>400 — <code>BAD_REQUEST</code></h3>
+<p>Payload invalide ou champ obligatoire manquant.</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;BAD_REQUEST&quot;, &quot;message&quot;: &quot;email and password are required&quot;, &quot;statusCode&quot;: 400 }
+</code></pre>
+<h3>401 — <code>UNAUTHORIZED</code></h3>
+<p>Token absent, expiré, invalide ou compte inactif.</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;UNAUTHORIZED&quot;, &quot;message&quot;: &quot;Invalid or expired token&quot;, &quot;statusCode&quot;: 401 }
+</code></pre>
+<h3>403 — <code>FORBIDDEN</code></h3>
+<p>Action interdite pour le rôle ou l&#39;état actuel.</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;FORBIDDEN&quot;, &quot;message&quot;: &quot;Only draft plans can be modified&quot;, &quot;statusCode&quot;: 403 }
+{ &quot;error&quot;: &quot;FORBIDDEN&quot;, &quot;message&quot;: &quot;super_admin role required&quot;, &quot;statusCode&quot;: 403 }
+</code></pre>
+<h3>404 — <code>NOT_FOUND</code></h3>
+<p>Ressource introuvable.</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;NOT_FOUND&quot;, &quot;message&quot;: &quot;Plan not found&quot;, &quot;statusCode&quot;: 404 }
+</code></pre>
+<h3>409 — <code>CONFLICT</code></h3>
+<p>Conflit métier — typiquement une contrainte d&#39;unicité violée.</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;CONFLICT&quot;, &quot;message&quot;: &quot;Email already in use&quot;, &quot;statusCode&quot;: 409 }
+</code></pre>
+<h3>422 — <code>VALIDATION_ERROR</code></h3>
+<p>Règle métier violée (le payload est valide structurellement mais incohérent métier).</p>
+<pre><code class="language-json">{ &quot;error&quot;: &quot;VALIDATION_ERROR&quot;, &quot;message&quot;: &quot;Plan must have at least one enabled editor&quot;, &quot;statusCode&quot;: 422 }
+{ &quot;error&quot;: &quot;VALIDATION_ERROR&quot;, &quot;message&quot;: &quot;blockly_definition is required before submitting&quot;, &quot;statusCode&quot;: 422 }
+</code></pre>
+<h3>429 — <code>TOO_MANY_REQUESTS</code></h3>
+<p>Rate limit dépassé. Le gateway limite à <strong>100 requêtes par minute</strong> par défaut en développement.</p>
+<h3>500 — <code>INTERNAL_ERROR</code></h3>
+<p>Erreur serveur. À reporter à l&#39;équipe Cephalo Sophie avec le <code>request_id</code> du log.</p>
+<h2>Pattern de gestion côté client</h2>
+<pre><code class="language-javascript">async function apiCall(endpoint, options) {
+  const res = await fetch(endpoint, options)
+
+  if (res.status === 401) {
+    // Token expiré → tenter un refresh ou rediriger vers login
+    await refreshToken()
+    return apiCall(endpoint, options)
+  }
+
+  if (!res.ok) {
+    const err = await res.json()
+    throw new ApiError(err.error, err.message, err.statusCode)
+  }
+
+  return res.json()
+}
+
+class ApiError extends Error {
+  constructor(code, message, statusCode) {
+    super(message)
+    this.code = code
+    this.statusCode = statusCode
+  }
+}
+</code></pre>
+<h2>Erreurs spécifiques au cycle de vie</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Erreur typique</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PUT /plans/{id}</code> sur un plan non-<code>draft</code></td>
+<td>403 — Only draft plans can be modified</td>
+</tr>
+<tr>
+<td><code>PATCH /plans/{id}/submit</code> sans éditeur activé</td>
+<td>422 — Plan must have at least one enabled editor</td>
+</tr>
+<tr>
+<td><code>PATCH /plans/{id}/validate</code> sur un plan non-<code>pending</code></td>
+<td>403 — Transition not allowed</td>
+</tr>
+<tr>
+<td><code>PATCH /blocs/{id}/submit</code> sans <code>blockly_definition</code></td>
+<td>422 — blockly_definition is required</td>
+</tr>
+<tr>
+<td><code>PATCH /orgs/{id}/suspend</code> sur une org non-<code>active</code></td>
+<td>403 — Only active organisations can be suspended</td>
+</tr>
+<tr>
+<td><code>PATCH /orgs/{id}/close</code> sans <code>confirm: true</code></td>
+<td>403 — Closing an organisation requires explicit confirm</td>
+</tr>
+</tbody></table>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>
